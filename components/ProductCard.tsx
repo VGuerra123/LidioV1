@@ -1,3 +1,14 @@
+// NOTE: This file has been updated to safely handle optional product images.
+// The previous implementation assumed that `product.images` and its nested `edges`
+// array would always be defined. However, according to the ShopifyProduct type
+// definition (see `lib/types.ts`), `images` and `edges` are optional properties.
+// Attempting to directly access `product.images.edges[0]` when `images` is
+// undefined causes a TypeScript error (and would crash at runtime). To fix
+// this, optional chaining (`?.`) is used when accessing these potentially
+// undefined properties. This ensures that if `images` or `edges` is
+// undefined, the expression evaluates to `undefined` rather than throwing an
+// error. The rest of the component remains unchanged.
+
 'use client';
 
 import { useState } from 'react';
@@ -18,7 +29,10 @@ export default function ProductCard({ product }: ProductCardProps) {
 
   const price = parseFloat(product.priceRange.minVariantPrice.amount);
   const currency = product.priceRange.minVariantPrice.currencyCode;
-  const image = product.images.edges[0]?.node;
+  // Use optional chaining to safely access nested properties. Without this,
+  // TypeScript complains that `images` may be undefined. This change guards
+  // against undefined `images` and `edges`.
+  const image = product.images?.edges?.[0]?.node;
 
   const formatPrice = (amount: number) => {
     return new Intl.NumberFormat('es-ES', {
