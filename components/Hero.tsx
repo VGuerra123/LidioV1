@@ -69,22 +69,13 @@ export default function Hero() {
               transition={{ duration: 0.2 }}
               className="flex justify-center lg:justify-start"
             >
-              <span className="
-                  inline-flex items-center gap-2 rounded-full px-3 py-1
-                  text-xs font-medium
-                  bg-white/70 text-slate-700 ring-1 ring-slate-200
-                  dark:bg-white/5 dark:text-slate-300 dark:ring-slate-800
-                "
-              >
-                Hecho para Chile • 2025
-              </span>
             </motion.div>
 
             <motion.h1
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight text-gray-900 dark:text-white"
+              className="text-3xl sm:text-5xl lg:text-6xl font-extrabold leading-tight text-gray-900 dark:text-white"
             >
               Tecnología,{' '}
               <span className="bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">
