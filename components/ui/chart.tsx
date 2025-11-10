@@ -26,11 +26,9 @@ const ChartContext = React.createContext<ChartContextProps | null>(null);
 
 function useChart() {
   const context = React.useContext(ChartContext);
-
   if (!context) {
     throw new Error('useChart must be used within a <ChartContainer />');
   }
-
   return context;
 }
 
@@ -65,16 +63,14 @@ const ChartContainer = React.forwardRef<
     </ChartContext.Provider>
   );
 });
-ChartContainer.displayName = 'Chart';
+ChartContainer.displayName = 'ChartContainer';
 
 const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
   const colorConfig = Object.entries(config).filter(
-    ([_, config]) => config.theme || config.color
+    ([_, cfg]) => cfg.theme || cfg.color
   );
 
-  if (!colorConfig.length) {
-    return null;
-  }
+  if (!colorConfig.length) return null;
 
   return (
     <style
@@ -134,9 +130,7 @@ const ChartTooltipContent = React.forwardRef<
     const { config } = useChart();
 
     const tooltipLabel = React.useMemo(() => {
-      if (hideLabel || !payload?.length) {
-        return null;
-      }
+      if (hideLabel || !payload?.length) return null;
 
       const [item] = payload;
       const key = `${labelKey || item.dataKey || item.name || 'value'}`;
@@ -154,9 +148,7 @@ const ChartTooltipContent = React.forwardRef<
         );
       }
 
-      if (!value) {
-        return null;
-      }
+      if (!value) return null;
 
       return <div className={cn('font-medium', labelClassName)}>{value}</div>;
     }, [
@@ -169,9 +161,7 @@ const ChartTooltipContent = React.forwardRef<
       labelKey,
     ]);
 
-    if (!active || !payload?.length) {
-      return null;
-    }
+    if (!active || !payload?.length) return null;
 
     const nestLabel = payload.length === 1 && indicator !== 'dot';
 
@@ -209,13 +199,13 @@ const ChartTooltipContent = React.forwardRef<
                         <div
                           className={cn(
                             'shrink-0 rounded-[2px] border-[--color-border] bg-[--color-bg]',
-                            {
-                              'h-2.5 w-2.5': indicator === 'dot',
-                              'w-1': indicator === 'line',
-                              'w-0 border-[1.5px] border-dashed bg-transparent':
-                                indicator === 'dashed',
-                              'my-0.5': nestLabel && indicator === 'dashed',
-                            }
+                            indicator === 'dot' && 'h-2.5 w-2.5',
+                            indicator === 'line' && 'w-1',
+                            indicator === 'dashed' &&
+                              'w-0 border-[1.5px] border-dashed bg-transparent',
+                            nestLabel &&
+                              indicator === 'dashed' &&
+                              'my-0.5'
                           )}
                           style={
                             {
@@ -272,9 +262,7 @@ const ChartLegendContent = React.forwardRef<
   ) => {
     const { config } = useChart();
 
-    if (!payload?.length) {
-      return null;
-    }
+    if (!payload?.length) return null;
 
     return (
       <div
@@ -289,7 +277,7 @@ const ChartLegendContent = React.forwardRef<
           const key = `${nameKey || item.dataKey || 'value'}`;
           const itemConfig = getPayloadConfigFromPayload(config, item, key);
 
-          return (
+        return (
             <div
               key={item.value}
               className={cn(
@@ -301,9 +289,7 @@ const ChartLegendContent = React.forwardRef<
               ) : (
                 <div
                   className="h-2 w-2 shrink-0 rounded-[2px]"
-                  style={{
-                    backgroundColor: item.color,
-                  }}
+                  style={{ backgroundColor: item.color }}
                 />
               )}
               {itemConfig?.label}
@@ -328,31 +314,29 @@ function getPayloadConfigFromPayload(
 
   const payloadPayload =
     'payload' in payload &&
-    typeof payload.payload === 'object' &&
-    payload.payload !== null
-      ? payload.payload
+    typeof (payload as any).payload === 'object' &&
+    (payload as any).payload !== null
+      ? (payload as any).payload
       : undefined;
 
   let configLabelKey: string = key;
 
   if (
-    key in payload &&
-    typeof payload[key as keyof typeof payload] === 'string'
+    key in (payload as any) &&
+    typeof (payload as any)[key] === 'string'
   ) {
-    configLabelKey = payload[key as keyof typeof payload] as string;
+    configLabelKey = (payload as any)[key] as string;
   } else if (
     payloadPayload &&
     key in payloadPayload &&
-    typeof payloadPayload[key as keyof typeof payloadPayload] === 'string'
+    typeof payloadPayload[key] === 'string'
   ) {
-    configLabelKey = payloadPayload[
-      key as keyof typeof payloadPayload
-    ] as string;
+    configLabelKey = payloadPayload[key] as string;
   }
 
   return configLabelKey in config
     ? config[configLabelKey]
-    : config[key as keyof typeof config];
+    : (config as any)[key];
 }
 
 export {

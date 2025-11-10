@@ -4,15 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { motion, useReducedMotion } from 'framer-motion';
-import {
-  ArrowRight,
-  Truck,
-  ShieldCheck,
-  CreditCard,
-  Receipt,
-  Star,
-  Clock,
-} from 'lucide-react';
+import { ArrowRight, Truck, ShieldCheck, CreditCard, Receipt, Star, Clock } from 'lucide-react';
 
 export default function Hero() {
   const reduce = useReducedMotion();
@@ -33,8 +25,8 @@ export default function Hero() {
         <div className="absolute inset-0 opacity-[0.05] dark:opacity-[0.07] [background:radial-gradient(circle_at_1px_1px,#000_1px,transparent_1px)] [background-size:18px_18px]" />
       </div>
 
-      <div className="relative mx-auto max-w-7xl px-6 sm:px-10 py-16 sm:py-24">
-        <div className="grid items-center gap-12 lg:grid-cols-2">
+      <div className="relative mx-auto max-w-7xl px-5 sm:px-8 py-14 sm:py-20">
+        <div className="grid items-center gap-10 lg:grid-cols-2">
           {/* ===== PERSONAJE SOLO (protagonista) ===== */}
           <div className="order-1 lg:order-2 flex justify-center">
             <motion.div
@@ -55,7 +47,7 @@ export default function Hero() {
                 aria-hidden
                 className="absolute -inset-6 rounded-[28px] bg-gradient-to-r from-cyan-500/24 via-blue-600/24 to-cyan-500/24 blur-2xl"
               />
-              <div className="relative h-48 w-48 sm:h-56 sm:w-56 lg:h-72 lg:w-72">
+              <div className="relative h-44 w-44 sm:h-56 sm:w-56 lg:h-72 lg:w-72">
                 <Image
                   src="/avatar1.webp"
                   alt="Personaje Lidio"
@@ -69,14 +61,23 @@ export default function Hero() {
           </div>
 
           {/* ===== COPY COMERCIAL CHILE 2025 ===== */}
-          <div className="order-2 lg:order-1 text-center lg:text-left space-y-7">
-            {/* Chip país/año */}
+          <div className="order-2 lg:order-1 text-center lg:text-left space-y-6">
+            {/* Chip país/año (sutil y útil en mobile) */}
             <motion.div
-              initial={{ opacity: 0, y: -10 }}
+              initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.1 }}
+              transition={{ duration: 0.2 }}
               className="flex justify-center lg:justify-start"
             >
+              <span className="
+                  inline-flex items-center gap-2 rounded-full px-3 py-1
+                  text-xs font-medium
+                  bg-white/70 text-slate-700 ring-1 ring-slate-200
+                  dark:bg-white/5 dark:text-slate-300 dark:ring-slate-800
+                "
+              >
+                Hecho para Chile • 2025
+              </span>
             </motion.div>
 
             <motion.h1
@@ -85,33 +86,34 @@ export default function Hero() {
               transition={{ duration: 0.6 }}
               className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight text-gray-900 dark:text-white"
             >
-              Tecnología que{' '}
+              Tecnología,{' '}
               <span className="bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text text-transparent">
-                potencia tu mundo
-              </span>
+                Conexión
+              </span>{' '}
+              y Confianza
             </motion.h1>
 
             <motion.p
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7 }}
-              className="mx-auto max-w-xl lg:mx-0 text-lg sm:text-xl leading-relaxed text-gray-600 dark:text-slate-300"
+              className="mx-auto max-w-xl lg:mx-0 text-[15.5px] sm:text-lg leading-relaxed text-gray-600 dark:text-slate-300"
             >
-               En Lidio te conectamos con la innovación. Descubre lo último en tecnología con envío rápido y garantía extendida.
+              En Lidio te conectamos con la innovación. Descubre lo último en tecnología con despacho ágil y garantía extendida. Todo, con soporte humano real.
             </motion.p>
 
-            {/* CTAs grandes y claros */}
+            {/* CTAs (mobile-first) */}
             <motion.div
               initial={{ opacity: 0, y: 22 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+              className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start"
             >
               <Link href="/productos" aria-label="Explorar productos">
                 <Button
                   size="lg"
                   className="
-                    rounded-xl text-white
+                    w-full sm:w-auto rounded-xl text-white
                     bg-gradient-to-r from-cyan-600 to-blue-600
                     hover:from-cyan-700 hover:to-blue-700
                     shadow-lg hover:shadow-blue-500/30 transition-all duration-300
@@ -127,7 +129,7 @@ export default function Hero() {
                   size="lg"
                   variant="outline"
                   className="
-                    rounded-xl border-2 border-gray-300 dark:border-slate-700
+                    w-full sm:w-auto rounded-xl border-2 border-gray-300 dark:border-slate-700
                     hover:border-blue-600 hover:text-blue-600 dark:hover:text-cyan-400
                     transition-all duration-300
                   "
@@ -137,34 +139,36 @@ export default function Hero() {
               </Link>
             </motion.div>
 
-            {/* Beneficios comerciales “que cierran venta” */}
+            {/* Beneficios comerciales (texto refinado y compacto) */}
             <motion.ul
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.9 }}
-              className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4"
+              className="
+                grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-4 gap-3 pt-3
+              "
               aria-label="Beneficios de la tienda"
             >
               {[
                 {
                   Icon: Truck,
-                  title: 'Despacho RM 24-48h',
-                  desc: 'Regiones vía courier',
+                  title: 'Despacho ágil',
+                  desc: 'RM 24–48 h · Regiones vía courier',
                 },
                 {
                   Icon: CreditCard,
                   title: 'Cuotas sin interés',
-                  desc: '6–12 cuotas*',
+                  desc: 'Hasta 12x con bancos adheridos',
                 },
                 {
                   Icon: Receipt,
                   title: 'Boleta o factura',
-                  desc: 'IVA incluido',
+                  desc: 'Precios con IVA incluido',
                 },
                 {
                   Icon: ShieldCheck,
-                  title: 'Garantía 12 meses',
-                  desc: 'Soporte humano',
+                  title: 'Garantía extendida',
+                  desc: '12 meses + soporte humano',
                 },
               ].map(({ Icon, title, desc }, i) => (
                 <li
@@ -176,35 +180,35 @@ export default function Hero() {
                     flex items-start gap-3
                   "
                 >
-                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-cyan-100 text-cyan-700 dark:bg-cyan-500/20 dark:text-cyan-300">
+                  <span className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cyan-100 text-cyan-700 dark:bg-cyan-500/20 dark:text-cyan-300">
                     <Icon className="h-5 w-5" />
                   </span>
                   <div className="min-w-0">
                     <p className="text-[13px] font-semibold text-slate-900 dark:text-white">{title}</p>
-                    <p className="text-[12px] text-slate-600 dark:text-slate-400">{desc}</p>
+                    <p className="text-[12.5px] text-slate-600 dark:text-slate-400 leading-snug">{desc}</p>
                   </div>
                 </li>
               ))}
             </motion.ul>
 
-            {/* Barra de confianza (rating + “más de X clientes”) */}
+            {/* Barra de confianza (rating + horario) */}
             <motion.div
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1 }}
-              className="flex items-center justify-center lg:justify-start gap-3 pt-2"
+              className="flex flex-wrap items-center justify-center lg:justify-start gap-2.5 pt-1.5"
             >
-              <span className="inline-flex items-center gap-1 text-sm font-semibold text-slate-900 dark:text-slate-100">
+              <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-slate-900 dark:text-slate-100">
                 <Star className="h-4 w-4 fill-yellow-400 text-yellow-400" />
                 4.9/5
               </span>
-              <span aria-hidden className="text-slate-400">•</span>
+              <span aria-hidden className="hidden sm:inline text-slate-400">•</span>
               <span className="text-sm text-slate-600 dark:text-slate-400">
                 +10.000 pedidos entregados
               </span>
               <span aria-hidden className="hidden sm:inline text-slate-400">•</span>
-              <span className="hidden sm:inline text-sm text-slate-600 dark:text-slate-400">
-                Atención de Lunes a Sábado <Clock className="inline h-4 w-4 ml-1" />
+              <span className="inline-flex items-center text-sm text-slate-600 dark:text-slate-400">
+                Atención Lun–Sáb <Clock className="inline h-4 w-4 ml-1" />
               </span>
             </motion.div>
           </div>
