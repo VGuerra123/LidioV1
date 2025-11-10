@@ -22,7 +22,7 @@ import {
   SheetFooter,
 } from '@/components/ui/sheet';
 import { Filter, ArrowUpDown } from 'lucide-react';
-import { ShopifyProduct } from '@/lib/shopify'; // ✅ Tipo oficial
+import type { ShopifyProduct } from '@/lib/types';
 
 // Tipo base para edges
 type Edge = { node: ShopifyProduct };
