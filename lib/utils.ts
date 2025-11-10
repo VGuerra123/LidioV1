@@ -1,6 +1,12 @@
-import { clsx, type ClassValue } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+// Utility helpers used across components
 
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+/**
+ * Concatenate class names conditionally. Similar to clsx or classNames.
+ * Filters out falsey values and joins the rest with spaces.
+ *
+ * @param classes array of class names or falsey values
+ * @returns concatenated class names
+ */
+export function cn(...classes: (string | false | null | undefined)[]): string {
+  return classes.filter(Boolean).join(' ');
 }

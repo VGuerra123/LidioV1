@@ -1,19 +1,35 @@
-import Hero from '@/components/Hero';
-import FeaturedCategories from '@/components/FeaturedCategories';
-import ProductGrid from '@/components/ProductGrid';
+// Home page with improved mobile-first design and lazy loading
+// This file wraps heavy components in dynamic imports and Suspense to enable
+// code-splitting and lazy loading. The design remains similar but now
+// leverages skeletons while data loads.
+
+import dynamic from 'next/dynamic';
+import { Suspense } from 'react';
 import { getProducts } from '@/lib/shopify';
-// Import ShopifyProduct type to type products array explicitly
-// Import the ShopifyProduct type from the shared types definition to match the
-// ProductGrid component's expectations (see components/ProductGrid.tsx).
-import type { ShopifyProduct } from '@/lib/types';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
+// Lazy load heavy components with optional skeletons. Using `ssr: false` on
+// components that depend on browser APIs improves hydration performance on
+// mobile devices.
+const Hero = dynamic(() => import('@/components/Hero'), { ssr: true });
+const FeaturedCategories = dynamic(() => import('@/components/FeaturedCategories'), {
+  ssr: false,
+  loading: () => null,
+});
+const ProductGrid = dynamic(() => import('@/components/ProductGrid'), {
+  ssr: false,
+  loading: () => null,
+});
+
+// Skeleton fallback for product grid
+import ProductGridSkeleton from '@/components/ProductGridSkeleton';
+
+// Revalidate the page every hour
 export const revalidate = 3600;
 
 export default async function Home() {
-  // Explicitly type the products array to avoid the implicit 'any' error in TypeScript strict mode
-  let products: { node: ShopifyProduct }[] = [];
+  let products: any[] = [];
 
   try {
     products = await getProducts();
@@ -25,9 +41,13 @@ export default async function Home() {
 
   return (
     <div>
-      <Hero />
+      <Suspense fallback={null}>
+        <Hero />
+      </Suspense>
 
-      <FeaturedCategories />
+      <Suspense fallback={null}>
+        <FeaturedCategories />
+      </Suspense>
 
       <section className="py-16 bg-gradient-to-b from-white to-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -42,7 +62,9 @@ export default async function Home() {
 
           {featuredProducts.length > 0 ? (
             <>
-              <ProductGrid products={featuredProducts} />
+              <Suspense fallback={<ProductGridSkeleton />}> 
+                <ProductGrid products={featuredProducts} />
+              </Suspense>
               <div className="text-center mt-12">
                 <Link href="/productos">
                   <Button
