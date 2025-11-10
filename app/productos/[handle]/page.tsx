@@ -7,7 +7,14 @@ import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
 import {
-  ArrowLeft, ShoppingCart, Heart, Share2, Truck, Shield, CheckCircle2, Star,
+  ArrowLeft,
+  ShoppingCart,
+  Heart,
+  Share2,
+  Truck,
+  Shield,
+  CheckCircle2,
+  Star,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -42,14 +49,13 @@ type Product = {
   variants?: { edges: { node: Variant }[] };
 };
 
-/* Component */
+/* ---------------- Component ---------------- */
 export default function ProductPage() {
   const params = useParams<{ handle: string }>();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedImage, setSelectedImage] = useState(0);
   const [isFavorite, setIsFavorite] = useState(false);
-  const [quantity, setQuantity] = useState(1);
   const [messageIndex, setMessageIndex] = useState(0);
 
   const messages = [
@@ -59,6 +65,7 @@ export default function ProductPage() {
     '⚡ Descubre más en la parte inferior.',
   ];
 
+  /* Ciclo de mensajes del asistente */
   useEffect(() => {
     const id = setInterval(() => {
       setMessageIndex((i) => (i + 1) % messages.length);
@@ -66,6 +73,7 @@ export default function ProductPage() {
     return () => clearInterval(id);
   }, []);
 
+  /* Carga del producto */
   useEffect(() => {
     (async () => {
       try {
@@ -80,6 +88,7 @@ export default function ProductPage() {
     })();
   }, [params.handle]);
 
+  /* Derivaciones */
   const images = useMemo(() => product?.images?.edges ?? [], [product]);
   const variants = useMemo(() => product?.variants?.edges?.map((e) => e.node) ?? [], [product]);
   const basePrice = parseFloat(
@@ -91,13 +100,20 @@ export default function ProductPage() {
     'CLP';
   const inStock = Boolean(variants?.[0]?.availableForSale ?? product?.availableForSale);
 
+  /* Funciones seguras para navegador */
   const addToCart = () => {
     if (!inStock) return toast.error('Sin stock');
-    toast.success('Producto agregado al carrito');
+    toast.success('Producto agregado al carrito 🛒');
   };
+
   const shareLink = () => {
-    navigator.clipboard.writeText(window.location.href);
-    toast.success('Enlace copiado 📎');
+    if (typeof window === 'undefined' || typeof navigator === 'undefined') return;
+    try {
+      navigator.clipboard.writeText(window.location.href);
+      toast.success('Enlace copiado 📎');
+    } catch {
+      toast.error('No se pudo copiar el enlace');
+    }
   };
 
   /* ------------------ Loading ------------------ */
@@ -122,13 +138,18 @@ export default function ProductPage() {
     <div className="relative min-h-screen flex flex-col bg-gradient-to-b from-white via-blue-50/40 to-sky-50 dark:from-neutral-950 dark:via-neutral-900 dark:to-black overflow-hidden">
       {/* Header */}
       <div className="sticky top-0 z-50 flex items-center gap-2 p-4 bg-white/80 dark:bg-neutral-950/70 backdrop-blur-xl border-b border-gray-100 dark:border-neutral-800">
-        <Link href="/productos" className="flex items-center text-sm text-gray-600 dark:text-gray-300">
+        <Link
+          href="/productos"
+          className="flex items-center text-sm text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-cyan-400 transition"
+        >
           <ArrowLeft className="w-4 h-4 mr-1" /> Volver
         </Link>
-        <p className="text-sm font-medium text-gray-800 dark:text-gray-100 truncate">{product.title}</p>
+        <p className="text-sm font-medium text-gray-800 dark:text-gray-100 truncate">
+          {product.title}
+        </p>
       </div>
 
-      {/* Imagen Principal */}
+      {/* Imagen principal */}
       <section className="relative aspect-[4/5] sm:aspect-square w-full overflow-hidden">
         <AnimatePresence mode="wait">
           <motion.div
@@ -143,6 +164,7 @@ export default function ProductPage() {
               src={images[selectedImage]?.node.url ?? '/placeholder.png'}
               alt={product.title}
               fill
+              priority
               className="object-cover select-none touch-none"
             />
           </motion.div>
@@ -269,7 +291,7 @@ export default function ProductPage() {
         </Button>
       </div>
 
-      {/* 🤖 Lidio Asistente flotante */}
+      {/* 🤖 Asistente Lidio flotante */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
