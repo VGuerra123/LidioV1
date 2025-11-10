@@ -36,9 +36,21 @@ export default function ProductsPage() {
   const [sortBy, setSortBy] = useState<SortKey>('featured');
   const [filters, setFilters] = useState<FiltersState>({ categories: [] });
   const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
+  const [windowWidth, setWindowWidth] = useState<number>(1200);
 
+  // ✅ Safe motion values
   const mouseX = useMotionValue(0);
-  const rotateY = useTransform(mouseX, [0, window.innerWidth], [-6, 6]);
+  const rotateY = useTransform(mouseX, [0, windowWidth], [-6, 6]);
+
+  // ✅ Actualiza el ancho de ventana sólo en cliente
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setWindowWidth(window.innerWidth);
+      const handleResize = () => setWindowWidth(window.innerWidth);
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }
+  }, []);
 
   // 🔄 Fetch productos
   useEffect(() => {
@@ -109,7 +121,7 @@ export default function ProductsPage() {
       dark:from-slate-950 dark:via-slate-900 dark:to-slate-900 overflow-hidden"
       onMouseMove={(e) => mouseX.set(e.clientX)}
     >
-      {/* ✨ Fondo dinámico de partículas */}
+      {/* ✨ Fondo dinámico */}
       <motion.div
         className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_30%_30%,rgba(0,200,255,0.08),transparent_60%)]"
         animate={{ opacity: [0.7, 1, 0.7] }}
@@ -121,10 +133,9 @@ export default function ProductsPage() {
         transition={{ repeat: Infinity, duration: 9 }}
       />
 
-      {/* 🎬 HEADER CINEMÁTICO */}
+      {/* 🎬 HEADER */}
       <header className="relative overflow-hidden bg-gradient-to-r from-blue-700 via-cyan-600 to-sky-500 text-white shadow-2xl">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between px-6 py-12">
-          {/* Texto principal */}
           <div className="space-y-3 text-center md:text-left">
             <motion.h1
               initial={{ opacity: 0, y: 15 }}
@@ -162,7 +173,6 @@ export default function ProductsPage() {
               priority
               className="drop-shadow-[0_10px_50px_rgba(0,255,255,0.4)] hover:scale-105 transition-transform duration-500"
             />
-            {/* Reflejo */}
             <motion.div
               className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-36 h-6 bg-cyan-400/30 rounded-full blur-2xl"
               animate={{ scaleX: [1, 1.2, 1], opacity: [0.4, 0.8, 0.4] }}
